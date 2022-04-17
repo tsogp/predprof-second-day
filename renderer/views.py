@@ -2,6 +2,7 @@ from django.shortcuts import render
 from plotly.offline import plot
 import plotly.graph_objects as go
 
+
 from .forms import AnomalyForm  
 from .models import Detector, Anomaly, DetectAnomaly
 
@@ -76,22 +77,28 @@ def find_detectors():
 
 def index_page(request):
     # print(find_detectors())
-    # find_detectors()
+    find_detectors()
     if request.method=="POST":
         if 'dec_id' in request.POST:
             d=Detector(id=request.POST['dec_id'], x_coord = request.POST['dec_x'], y_coord = request.POST['dec_y'])
+            d.save()
         elif 'an_id' in request.POST:
             try:
                 an_per = Anomaly.objects.get(id=request.POST['an_id'])
             except:
                 an_per = Anomaly(id=request.POST['an_id'])
-                # al.save()
-                print(15)
+                an_per.save()
             try:
                 dec_per = Detector.objects.get(id=int(request.POST['an_dec_id']))
                 dec_an = DetectAnomaly(detector_id = dec_per,anomaly_id=an_per,rate=float(request.POST['an_rate']))
+                dec_an.save()
             except:
                 print('no_detector')
+        elif 'start_x' in request.POST:
+            start_x = int(request.POST['start_x'])
+            start_y = int(request.POST['start_y'])
+            finish_x = int(request.POST['finish_x'])
+            finish_y = int(request.POST['finish_y'])
     
     context = {}
 
