@@ -33,6 +33,7 @@
     </div>
     <div class="for-form">
         <form method="POST" class="form">
+            {%csrf_token%}
             <div class="input-content">
                 <div class="name">Id детектора</div>
                 <input type="text" size=40 name="an_dec_id">
