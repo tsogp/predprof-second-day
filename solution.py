@@ -5,34 +5,38 @@ F = {'5b6eb38b': [0.1626, 0.2667, 0.262, 0.9231], 'c00b92ba': [0.249, 0.6186, 0.
 def rasst(x, y):
     return((x**2 + y**2))
 
-def find_detectors(F, exists, x, y): 
-    n=0
-    ot=[]
+def find_detectors(F, exists, x, y):
+    n = 0
+    ot = []
     for detector in F.keys():
-        n+=1
-        delta=1.024
-        numsx=[]
-        numsy=[]
-        while (len(numsx)==0 or len(numsx)>2):
-            numsx=[]
-            numsy=[]
-            numsk=[]
-            delta*=0.8
+        n += 1
+        delta = 1.024
+        numsx = []
+        numsy = []
+        while (len(numsx) == 0 or len(numsx) > 2):
+            numsx = []
+            numsy = []
+            numsk = []
+            koef = 0
+            delta *= 0.8
             for x0 in range(1, 36):
                 for y0 in range(1, 36):
-                    flag=True
+                    flag = True
                     for f1 in range(len(F[detector])):
-                        for f2 in range(f1+1, len(F[detector])):
+                        for f2 in range(f1 + 1, len(F[detector])):
                             if exists[detector][f1] and exists[detector][f2]:
-                                r1=F[detector][f1]*rasst(x0-x[f1], y0-y[f1])
-                                r2=F[detector][f2]*rasst(x0-x[f2], y0-y[f2])
-                                if (abs(r2-r1)<=delta):
-                                    numsx.append(x0)
-                                    numsy.append(y0)
-                                    numsk.append(r1)
+                                r1 = F[detector][f1] * rasst(x0 - x[f1], y0 - y[f1])
+                                r2 = F[detector][f2] * rasst(x0 - x[f2], y0 - y[f2])
+                                if (abs(r2 - r1) > delta):
+                                    flag = False
+                                    koef = r1
+                    if flag:
+                        numsx.append(x0)
+                        numsy.append(y0)
+                        numsk.append(koef)
         ot.append([numsx[0], numsy[0], round(numsk[0], 3)])
-    return(ot)
-        
+    return (ot)
+
 
 
 x = [9, 33, 9, 32]
@@ -42,17 +46,20 @@ F = {'5b6eb38b': [0.1626, 0.2667, 0.262, 0.9231], 'c00b92ba': [0.249, 0.6186, 0.
 
 print(find_detectors(F, exists,  x, y))
 
+
+
 def make_matrice(anomalies):
-    ans = [[0 for i in range(1, 36)] for i in range(1, 36)]
+    ans = [[0 for i in range(0, 36)] for i in range(0, 36)]
     for anomaly in anomalies:
-        print(anomaly)
         for x in range(1, 36):
             for y in range(1, 36):
-                ans[x][y] = max(ans[x][y], anomaly[2] / rasst(anomaly[0] - x, anomaly[1] - y) )
+                if (x==anomaly[0] and y==anomaly[1]):
+                    ans[x][y]=max(ans[x][y], anomaly[2])
+                else:
+                    ans[x][y] = max(ans[x][y], anomaly[2] / rasst(anomaly[0] - x, anomaly[1] - y) )
+                ans[x][y]=round(ans[x][y], 1)
+    return ans
 
-    print(ans)
 
-print('-----------')
-make_matrice(find_detectors(F, exists,  x, y))
                         
 
