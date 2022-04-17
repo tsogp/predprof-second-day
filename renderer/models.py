@@ -2,11 +2,12 @@ from datetime import date
 from django.db import models
 
 class Detector(models.Model):
+    id = models.FloatField(primary_key=True)
     x_coord = models.FloatField(blank=False)
     y_coord = models.FloatField(blank=False)
 
     def __str__(self):
-        return self.pk
+        return self.id
 
 class Anomaly(models.Model):
     id = models.FloatField(primary_key=True)
@@ -14,7 +15,7 @@ class Anomaly(models.Model):
     center_y = models.FloatField()
 
     def __str__(self):
-        return self.pk
+        return self.id
 
 class DetectAnomaly(models.Model):
     detector_id = models.ForeignKey(Detector, on_delete=models.CASCADE)
