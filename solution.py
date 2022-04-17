@@ -17,7 +17,6 @@ def find_detectors(F, exists, x, y):
             numsx=[]
             numsy=[]
             numsk=[]
-            koef=0
             delta*=0.8
             for x0 in range(1, 36):
                 for y0 in range(1, 36):
@@ -27,13 +26,10 @@ def find_detectors(F, exists, x, y):
                             if exists[detector][f1] and exists[detector][f2]:
                                 r1=F[detector][f1]*rasst(x0-x[f1], y0-y[f1])
                                 r2=F[detector][f2]*rasst(x0-x[f2], y0-y[f2])
-                                if (abs(r2-r1)>delta):
-                                    flag=False
-                                    koef=r1
-                    if flag:
-                        numsx.append(x0)
-                        numsy.append(y0)
-                        numsk.append(koef)
+                                if (abs(r2-r1)<=delta):
+                                    numsx.append(x0)
+                                    numsy.append(y0)
+                                    numsk.append(r1)
         ot.append([numsx[0], numsy[0], round(numsk[0], 3)])
     return(ot)
         
@@ -46,13 +42,17 @@ F = {'5b6eb38b': [0.1626, 0.2667, 0.262, 0.9231], 'c00b92ba': [0.249, 0.6186, 0.
 
 print(find_detectors(F, exists,  x, y))
 
-x1 = [1, 3, 1]
-y1 = [1, 3, 3]
-exists1 = {"a": [True, True, True]}
-F1 = {"a": [1.0, 1.0, 1.0]}
-print(find_detectors(F1, exists1,  x1, y1))
+def make_matrice(anomalies):
+    ans = [[0 for i in range(1, 36)] for i in range(1, 36)]
+    for anomaly in anomalies:
+        print(anomaly)
+        for x in range(1, 36):
+            for y in range(1, 36):
+                ans[x][y] = max(ans[x][y], anomaly[2] / rasst(anomaly[0] - x, anomaly[1] - y) )
 
-def make_matrice():
-    pass
+    print(ans)
+
+print('-----------')
+make_matrice(find_detectors(F, exists,  x, y))
                         
 
