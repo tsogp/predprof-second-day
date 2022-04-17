@@ -20,15 +20,15 @@
             {%csrf_token%}
             <div class="input-content">
                 <div class="name">Id детектора</div>
-                <input type="text" size=40 name="dec_id">
+                <input type="text" size=40 name="dec_id" required class="field">
             </div>
             <div class="input-content">
                 <div class="name">Координата X</div>
-                <input type="text" size=40 name="dec_x">
+                <input type="text" size=40 name="dec_x" required class="field">
             </div>
             <div class="input-content">
                 <div class="name">Координата Y</div>
-                <input type="text" size=40 name="dec_y">
+                <input type="text" size=40 name="dec_y" required class="field">
             </div>
             <button type="submit" class="button">Отправить</button>
         </form>
@@ -38,15 +38,39 @@
             {%csrf_token%}
             <div class="input-content">
                 <div class="name">Id детектора</div>
-                <input type="text" size=40 name="an_dec_id">
+                <input type="text" size=40 name="an_dec_id" required class="field">
             </div>
             <div class="input-content">
                 <div class="name">Id аномалии</div>
-                <input type="text" size=40 name="an_id">
+                <input type="text" size=40 name="an_id" required class="field">
             </div>
             <div class="input-content">
                 <div class="name">rate</div>
-                <input type="text" size=40 name="an_rate">
+                <input type="text" size=40 name="an_rate" required class="field">
+            </div>
+            <button type="submit" class="button">Отправить</button>
+        </form>
+    </div>
+    <div class="for-form">
+        <form method="GET" class="form">
+            {%csrf_token%}
+            <div class="name">Старт</div>
+            <div class="input-content">
+                <div class="name">X</div>
+                <input type="number" size=40 name="start_x" required class="field" min="1" max="35">
+            </div>
+            <div class="input-content">
+                <div class="name">Y</div>
+                <input type="number" size=40 name="start_y" required class="field" min="1" max="35">
+            </div>
+            <div class="name">Финиш</div>
+            <div class="input-content">
+                <div class="name">X</div>
+                <input type="number" size=40 name="finish_x" required class="field" min="1" max="35">
+            </div>
+            <div class="input-content">
+                <div class="name">Y</div>
+                <input type="number" size=40 name="finish_y" required class="field" min="1" max="35">
             </div>
             <button type="submit" class="button">Отправить</button>
         </form>
