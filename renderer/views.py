@@ -95,19 +95,43 @@ def index_page(request):
     
     context = {}
 
-    x = [i for i in range(0, 40 + 1)]
-    y = [i for i in range(0, 30 + 1)]
+    anomalies = Anomaly.objects.all()
+    anomalies_x = []
+    anomalies_y = []
+    anomalies_name = []
+    anomalies_rate = []
+    anomalies_rate_text = []
 
-    # List of graph objects for figure.
-    # Each object will contain on series of data.
+    for i in range(len(anomalies)):
+        print(anomalies[i].center_x, anomalies[i].center_y)
+        anomalies_x.append(anomalies[i].center_x)
+        anomalies_y.append(anomalies[i].center_y)
+        anomalies_name.append(anomalies[i].id)
+        anomalies_rate.append(anomalies[i].real_rate * 7)
+        anomalies_rate_text.append('rate: ' + str(anomalies[i].real_rate))
+
+    x = [i for i in range(0, 40 + 1)]
+    y = [i for i in range(0, 40 + 1)]
+
     graphs = []
 
-    # Adding linear plot of y1 vs. x.
+    graphs.append(
+        go.Scatter(
+            x=anomalies_x, 
+            y=anomalies_y, 
+            mode='markers', 
+            marker_size=anomalies_rate, 
+            text=anomalies_rate_text,  
+            marker={
+                'color': ['rgb(255,105,180)'] * len(anomalies)
+            },
+        )
+    )
+    
     graphs.append(
         go.Scatter(x=x, y=y)
     )
 
-    # Setting layout of the figure.
     layout = {
         'title': 'Карта',
         'xaxis': {
@@ -134,7 +158,6 @@ def index_page(request):
         'width': 2000,
     }
 
-    # Getting HTML needed to render the plot.
     plot_div = plot({
         'data': graphs, 
         'layout': layout,
