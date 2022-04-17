@@ -33,37 +33,50 @@ def generate():
 def rasst(x, y):
     return((x**2 + y**2))
 
-def find_detectors(): 
+def find_detectors():
     F,exists,x,y=generate()
-    n=0
-    ot=[]
+    n = 0
+    ot = []
     for detector in F.keys():
-        n+=1
-        delta=1.024
-        numsx=[]
-        numsy=[]
-        while (len(numsx)==0 or len(numsx)>2):
-            numsx=[]
-            numsy=[]
-            numsk=[]
-            delta*=0.8
+        n += 1
+        delta = 1.024
+        numsx = []
+        numsy = []
+        while (len(numsx) == 0 or len(numsx) > 2):
+            numsx = []
+            numsy = []
+            numsk = []
+            koef = 0
+            delta *= 0.8
             for x0 in range(1, 36):
                 for y0 in range(1, 36):
-                    flag=True
+                    flag = True
                     for f1 in range(len(F[detector])):
-                        for f2 in range(f1+1, len(F[detector])):
+                        for f2 in range(f1 + 1, len(F[detector])):
                             if exists[detector][f1] and exists[detector][f2]:
-                                r1=F[detector][f1]*rasst(x0-x[f1], y0-y[f1])
-                                r2=F[detector][f2]*rasst(x0-x[f2], y0-y[f2])
-                                if (abs(r2-r1)<=delta):
-                                    numsx.append(x0)
-                                    numsy.append(y0)
-                                    numsk.append(r1)
+                                r1 = F[detector][f1] * rasst(x0 - x[f1], y0 - y[f1])
+                                r2 = F[detector][f2] * rasst(x0 - x[f2], y0 - y[f2])
+                                if (abs(r2 - r1) > delta):
+                                    flag = False
+                                    koef = r1
+                    if flag:
+                        numsx.append(x0)
+                        numsy.append(y0)
+                        numsk.append(koef)
         ot.append([numsx[0], numsy[0], round(numsk[0], 3)])
-    return(ot)
+    schet = -1
+    for i in F:
+        schet+=1
+        anom=Anomaly.objects.get(id=i)
+        anom.center_x = ot[schet][0]
+        anom.center_y = ot[schet][1]
+        anom.real_rate = ot[schet][2]
+        anom.save()
+    # return (ot)
 
 def index_page(request):
     # print(find_detectors())
+    # find_detectors()
     if request.method=="POST":
         if 'dec_id' in request.POST:
             d=Detector(id=request.POST['dec_id'], x_coord = request.POST['dec_x'], y_coord = request.POST['dec_y'])
