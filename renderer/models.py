@@ -9,6 +9,7 @@ class Detector(models.Model):
         return self.pk
 
 class Anomaly(models.Model):
+    id = models.FloatField(primary_key=True)
     center_x = models.FloatField()
     center_y = models.FloatField()
 
