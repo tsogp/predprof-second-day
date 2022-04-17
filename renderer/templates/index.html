@@ -9,10 +9,12 @@
 
 {% block content %}
 
-
-
 <div class="main-container">
-    <div class="map"></div>
+    <div class="map">
+        {% autoescape off %}
+            {{ plot_div }}
+        {% endautoescape %}
+    </div>
     <div class="for-form">
         <form method="POST" class="form" action="/" name="form1">
             {%csrf_token%}
