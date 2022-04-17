@@ -5,13 +5,16 @@ F = {'5b6eb38b': [0.1626, 0.2667, 0.262, 0.9231], 'c00b92ba': [0.249, 0.6186, 0.
 def rasst(x, y):
     return((x**2 + y**2))
 
+n=0
 for detector in F.keys():
-    delta=1
+    n+=1
+    delta=1.024
     numsx=[]
     numsy=[]
     while (len(numsx)==0 or len(numsx)>2):
         numsx=[]
         numsy=[]
+        numsk=[]
         delta*=0.8
         for x0 in range(1, 36):
             for y0 in range(1, 36):
@@ -23,7 +26,12 @@ for detector in F.keys():
                         if (abs(r2-r1)<=delta):
                             numsx.append(x0)
                             numsy.append(y0)
-    print(detector, ":", numsx[0], numsy[0])
+                            numsk.append(r1)
+    print(detector, "coords:", numsx[0], numsy[0])
+    print("id:", n)
+    print("int0: ", numsk[0])
+    print()
+    print()
 
                         
 
