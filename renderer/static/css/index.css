@@ -1,0 +1,33 @@
+.main-container{
+    display: flex;
+    width: 100vw;
+    min-height: 100vh;
+    flex-direction: column;
+
+}
+.for-form{
+    display: flex;
+    height: 200px;
+    margin: auto;
+}
+.form{
+    display:flex;
+    margin: auto;
+    height: 200px;
+    flex-direction: column;
+}
+.input-content{
+    height: 60px;
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+}
+.button{
+    width: 150px;
+    margin: auto;
+}
+.map{
+    height:400px;
+    width: 600px;
+    display: flex;
+}
