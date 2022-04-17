@@ -5,8 +5,6 @@ import plotly.graph_objects as go
 from .forms import AnomalyForm  
 from .models import Detector, Anomaly, DetectAnomaly
 
-<<<<<<< HEAD
-=======
 def generate():
     mas = Detector.objects.all()
     anomalies=Anomaly.objects.all()
@@ -64,7 +62,6 @@ def find_detectors():
         ot.append([numsx[0], numsy[0], round(numsk[0], 3)])
     return(ot)
 
->>>>>>> 22c0da0d67ca8980b5012f2644657e54c21561fd
 def index_page(request):
     # print(find_detectors())
     if request.method=="POST":
