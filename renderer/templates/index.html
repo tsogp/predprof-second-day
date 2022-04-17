@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+
 
 {% block name %}
     Index Page
@@ -6,4 +8,37 @@
 
 {% block content %}
 
+<link rel="stylesheet" type='text/css' href="{% static 'css/index.css' %}">
+
+<div class="main-container">
+    <div class="map"></div>
+    <div class="for-form">
+        <form method="POST">
+            <div class="input-content">
+                <div class="name">Id детектора</div>
+                <input type="text" size=40 >
+            </div>
+            <div class="input-content">
+                <div class="name">Координата X</div>
+                <input type="text" size=40 >
+            </div>
+            <div class="input-content">
+                <div class="name">Координата Y</div>
+                <input type="text" size=40 >
+            </div>
+        </form>
+    </div>
+    <div class="for-form">
+        <form method="POST">
+            <div class="input-content">
+                <div class="name">Id аномалии</div>
+                <input type="text" size=40 >
+            </div>
+            <div class="input-content">
+                <div class="name">rate</div>
+                <input type="text" size=40>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
