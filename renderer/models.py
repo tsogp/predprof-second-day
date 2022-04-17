@@ -13,6 +13,7 @@ class Anomaly(models.Model):
     id = models.CharField(primary_key=True, max_length=50)
     center_x = models.FloatField(null=True)
     center_y = models.FloatField(null=True)
+    real_rate = models.FloatField(null=True)
 
     def __str__(self):
         return str(self.id)
