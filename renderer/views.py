@@ -6,6 +6,100 @@ import plotly.graph_objects as go
 from .forms import AnomalyForm  
 from .models import Detector, Anomaly, DetectAnomaly
 
+def find_way():
+    SIZE = 6
+    matrix = [[random.randint(1, 2)] * SIZE for i in range(SIZE)]
+    # matrix = [[1] * SIZE for i in range(SIZE)]
+    for i in range(SIZE):
+        matrix[0][i] = 0
+        matrix[i][0] = 0
+
+    for r in matrix:
+        print(r)
+
+    start = (1, 1)
+    finish = (3, 3)
+
+
+    def f(q, finish, point, current_way, current_value, been):
+        # print(current_way)
+        if point == finish:
+            q.append((current_value, current_way))
+            return
+
+        if point[1] - 1 > 0 and not been[point[1] - 1][point[0]] and 0 < matrix[point[1] - 1][point[0]] < 2:
+            new_point = (point[0], point[1] - 1)
+            been[new_point[1]][new_point[0]] = True
+            f(q, finish, new_point, current_way + [new_point], current_value + matrix[new_point[1]][new_point[0]], been)
+            been[new_point[1]][new_point[0]] = False
+
+        if point[0] - 1 > 0 and not been[point[1]][point[0] - 1] and 0 < matrix[point[1]][point[0] - 1] < 2:
+            new_point = (point[0] - 1, point[1])
+            been[new_point[1]][new_point[0]] = True
+            f(q, finish, new_point, current_way + [new_point], current_value + matrix[new_point[1]][new_point[0]], been)
+            been[new_point[1]][new_point[0]] = False
+
+        if point[0] + 1 < SIZE and not been[point[1]][point[0] + 1] and 0 < matrix[point[1]][point[0] + 1] < 2:
+            new_point = (point[0] + 1, point[1])
+            been[new_point[1]][new_point[0]] = True
+            f(q, finish, new_point, current_way + [new_point], current_value + matrix[new_point[1]][new_point[0]], been)
+            been[new_point[1]][new_point[0]] = False
+
+        if point[1] + 1 < SIZE and not been[point[1] + 1][point[0]] and 0 < matrix[point[1] + 1][point[0]] < 2:
+            new_point = (point[0], point[1] + 1)
+            been[new_point[1]][new_point[0]] = True
+            f(q, finish, new_point, current_way + [new_point], current_value + matrix[new_point[1]][new_point[0]], been)
+            been[new_point[1]][new_point[0]] = False
+
+
+    def find_way(matrix, start, finish):
+        been = [[False] * SIZE for j in range(SIZE)]
+        been[start[1]][start[0]] = True
+
+        q = []
+
+        f(q, finish, start, [start], matrix[start[1]][start[0]], been)
+        # print(q)
+
+        min_d = 999999
+        ways = []
+        for a in q:
+            if a[0] < min_d:
+                min_d = a[0]
+                ways = [a[1]]
+            elif a[0] == min_d:
+                ways.append(a[1])
+
+        min_len = 999999
+        final_ways = []
+        for w in ways:
+            if len(w) < min_len:
+                min_len = len(w)
+                final_ways = [w]
+            elif len(w) == min_len:
+                final_ways.append(w)
+
+        if len(final_ways) > 0:
+            return final_ways[0]
+
+        return []
+
+    return find_way(matrix,start,finish)
+    # print(find_way(matrix, start, finish))
+
+
+def make_matrice(anomalies):
+    ans = [[0 for i in range(0, 36)] for i in range(0, 36)]
+    for anomaly in anomalies:
+        for x in range(1, 36):
+            for y in range(1, 36):
+                if (x==anomaly[0] and y==anomaly[1]):
+                    ans[x][y]=max(ans[x][y], anomaly[2])
+                else:
+                    ans[x][y] = max(ans[x][y], anomaly[2] / rasst(anomaly[0] - x, anomaly[1] - y) )
+                ans[x][y]=round(ans[x][y], 1)
+    return ans
+
 def generate():
     mas = Detector.objects.all()
     anomalies=Anomaly.objects.all()
@@ -65,17 +159,18 @@ def find_detectors():
                         numsy.append(y0)
                         numsk.append(koef)
         ot.append([numsx[0], numsy[0], round(numsk[0], 3)])
-    schet = -1
+    '''schet = -1
     for i in F:
         schet+=1
         anom=Anomaly.objects.get(id=i)
         anom.center_x = ot[schet][0]
         anom.center_y = ot[schet][1]
         anom.real_rate = ot[schet][2]
-        anom.save()
-    # return (ot)
+        anom.save()'''
+    return (ot)
 
 def index_page(request):
+    spis = []
     # print(find_detectors())
     find_detectors()
     if request.method=="POST":
@@ -99,6 +194,16 @@ def index_page(request):
             start_y = int(request.POST['start_y'])
             finish_x = int(request.POST['finish_x'])
             finish_y = int(request.POST['finish_y'])
+            '''start_x+=1
+            start_y+=1
+            finish_x+=1
+            finish_y+=1'''
+            spis = find_way(make_matrice(find_detectors()),(start_x,start_y),(finish_x,finish_y))
+            spis_x=[]
+            spis_y=[]
+            for abra in spis:
+                spis_x.append(abra[0])
+                spis_y.append(abra[1])
     
     context = {}
 
@@ -121,6 +226,10 @@ def index_page(request):
     y = [i for i in range(0, 40 + 1)]
 
     graphs = []
+
+    '''graphs.append(
+        go.Scatter(x=spis_x, y=spis_y)
+    )'''
 
     graphs.append(
         go.Scatter(
